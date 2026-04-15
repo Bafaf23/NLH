@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#F4F7F9] flex flex-col font-sans text-[#072146]">
+    <header class="p-6 flex items-center gap-4">
+        <a href="{{ url_for('home') }}" class="text-2xl">←</a>
+        <h1 class="text-xl font-bold">Crea tu cuenta</h1>
+    </header>
+
+    <main class="p-6 flex-1">
+        <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+            <h2 class="text-2xl font-bold mb-6">Únete a BBVA</h2>
+            
+            <form action="/auth/register" method="POST" class="space-y-6">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Nombre completo</label>
+                    <input type="text" name="nombre" class="w-full border-b-2 border-slate-200 py-2 focus:border-[#004481] outline-none transition-colors" placeholder="Ej. Bryant Facenda">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Correo electrónico</label>
+                    <input type="email" name="email" class="w-full border-b-2 border-slate-200 py-2 focus:border-[#004481] outline-none transition-colors" placeholder="tu@email.com">
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-[#004481] text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-900/20 active:scale-95 transition-transform">
+                        Continuar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="p-8 text-center">
+        <p class="text-xs text-slate-400">Al continuar, aceptas nuestros términos y condiciones de seguridad.</p>
+    </footer>
+</div>
+{% endblock %}

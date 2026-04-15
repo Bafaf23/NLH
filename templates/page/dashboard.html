@@ -1,0 +1,108 @@
+{% extends "_base.html"%} {%block content%}
+<div class="min-h-screen bg-[#F4F7F9] font-sans text-[#072146]">
+  <nav
+    class="bg-[#072146] p-4 flex justify-between items-center text-white shadow-md"
+  >
+    <div class="flex items-center gap-3">
+      <svg class="w-12 h-6" viewBox="0 0 100 32" fill="white">
+        <path
+          d="M0 32l11.5-32h10.2l-11.5 32h-10.2zm27.8 0l11.5-32h10.2l-11.5 32h-10.2zm27.7 0l11.5-32h10.2l-11.5 32h-10.2zm27.8 0l11.5-32h10.2l-11.5 32h-10.2z"
+        />
+      </svg>
+      <span class="font-light text-xl tracking-tight">Provincial</span>
+    </div>
+    <div
+      class="w-10 h-10 border-2 border-white/30 rounded-full flex items-center justify-center font-bold"
+    >
+      B
+    </div>
+  </nav>
+
+  <header
+    class="bg-[#072146] text-white pt-2 pb-16 px-6 relative overflow-hidden"
+  >
+    <h1 class="text-xl font-light">
+      Hola, <span class="font-bold">{{ user.name }}</span>
+    </h1>
+
+    <div
+      class="absolute bottom-0 right-0 w-full h-12 bg-[#F4F7F9]"
+      style="clip-path: polygon(0 100%, 100% 100%, 100% 0)"
+    ></div>
+  </header>
+
+  <main class="px-4 -mt-10 relative z-10">
+    <div
+      class="bg-white rounded-none border-b-4 border-[#004481] p-5 shadow-sm mb-6"
+    >
+      <div class="flex justify-between items-start mb-4">
+        <span class="text-[#004481] font-bold text-sm uppercase tracking-wide"
+          >Cuentas en {{ user.currency }}</span
+        >
+        <span class="text-xs text-slate-400">0108 •••• 4590</span>
+      </div>
+      <p class="text-xs text-slate-500 uppercase">Saldo disponible</p>
+      <h2 class="text-3xl font-light text-[#072146]">
+        {{ "{:,.2f}".format(user.balance) }}
+        <span class="text-lg font-normal">{{ user.currency }}</span>
+      </h2>
+    </div>
+
+    <section class="grid grid-cols-2 gap-3 mb-8">
+      <button
+        class="bg-white p-4 flex flex-col items-center border border-slate-200 hover:bg-slate-50 transition-colors"
+      >
+        <div class="text-[#004481] text-2xl mb-1">⇅</div>
+        <span class="text-[#072146] text-xs font-bold uppercase"
+          >Transferir</span
+        >
+      </button>
+      <button
+        class="bg-[#004481] p-4 flex flex-col items-center text-white shadow-lg"
+      >
+        <div class="text-2xl mb-1">⊕</div>
+        <span class="text-xs font-bold uppercase">Pago Móvil</span>
+      </button>
+    </section>
+
+    <section>
+      <h3 class="text-[#072146] font-bold text-sm uppercase mb-4 px-2">
+        Movimientos recientes
+      </h3>
+      <div class="bg-white border-t border-slate-200">
+        {% for trans in transactions %}
+        <div
+          class="flex justify-between items-center p-4 border-b border-slate-100"
+        >
+          <div>
+            <p class="text-sm font-bold text-[#072146]">{{ trans.concept }}</p>
+            <p class="text-xs text-slate-400">{{ trans.date }}</p>
+          </div>
+          <div class="text-right">
+            <p
+              class="text-sm font-bold {{ 'text-[#004481]' if trans.type == 'ingreso' else 'text-slate-800' }}"
+            >
+              {{ trans.amount }}
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  <footer
+    class="fixed bottom-0 w-full bg-white border-t border-slate-200 flex justify-around p-3 text-[#072146]"
+  >
+    <div class="flex flex-col items-center opacity-100">
+      <span class="text-xl">🏠</span><span class="text-[10px]">Inicio</span>
+    </div>
+    <div class="flex flex-col items-center opacity-40">
+      <span class="text-xl">💳</span><span class="text-[10px]">Tarjetas</span>
+    </div>
+    <div class="flex flex-col items-center opacity-40">
+      <span class="text-xl">👤</span><span class="text-[10px]">Perfil</span>
+    </div>
+  </footer>
+</div>
+{%endblock%}
