@@ -7,21 +7,26 @@
   <header class="relative z-10 pt-4 flex justify-between items-center">
     <div></div>
 
-    <div class="text-4xl font-bold tracking-tighter text-white select-none">
-      RB<span class="text-blue-400">O</span>
+    <div class="text-4xl font-black tracking-tighter text-white select-none">
+      RB<span
+        class="bg-gradient-to-tr from-blue-400 to-cyan-300 bg-clip-text text-transparent"
+        >O</span
+      >
     </div>
 
     <div class="flex flex-col items-center">
       <button
+        id="openModalaside"
         class="bg-blue-900/80 backdrop-blur-md rounded-full w-10 h-10 flex justify-center items-center hover:bg-blue-800"
       >
         <i class="fa-solid fa-bars text-sm"></i>
       </button>
+      {% include 'page/_aside.html' %}
       <span class="text-[10px] uppercase font-bold mt-1">Menú</span>
     </div>
   </header>
 
-  <main class="relative z-10 mt-10 flex justify-between flex-col gap-6">
+  <main class="relative mt-10 flex justify-between flex-col gap-6">
     <section
       class="bg-white/80 backdrop-blur-4xl rounded-2xl p-6 shadow-2xl flex flex-col gap-6 border"
     >
@@ -53,9 +58,8 @@
           {%endif%}
         </button>
 
-        {% include 'page/_modal_login.html' %} 
-        
-        {% if "loggedin" not in session %}
+        {% include 'page/_modal_login.html' %} {% if "loggedin" not in session
+        %}
 
         <div class="flex justify-between items-center px-1">
           <p class="text-slate-500 text-sm">¿No tienes cuenta?</p>
@@ -64,15 +68,21 @@
           >
         </div>
         {%else%}
-        <div class="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3 text-slate-500">
-          <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-[#005B7F]">
-              <i class="fa-solid fa-lock text-sm"></i>
+        <div
+          class="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3 text-slate-500"
+        >
+          <div
+            class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-[#005B7F]"
+          >
+            <i class="fa-solid fa-lock text-sm"></i>
           </div>
           <p class="text-[11px] leading-tight font-medium">
-              Tu seguridad es lo primero. <br>
-              <span class="text-slate-400">Nunca compartas tu clave con terceros.</span>
+            Tu seguridad es lo primero. <br />
+            <span class="text-slate-400"
+              >Nunca compartas tu clave con terceros.</span
+            >
           </p>
-      </div>
+        </div>
 
         {% endif %}
       </div>
@@ -89,28 +99,34 @@
       </div>
       <div class="flex overflow-x-auto gap-4 pb-4 snap-x scrollbar-hide">
         {% for item in news %}
-        <div class="flex-shrink-0 w-80 flex gap-4 group cursor-pointer bg-white/50 p-3 rounded-2xl border border-slate-100 snap-center hover:shadow-lg transition-all">
-          
-          <div class="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden shadow-sm">
+        <div
+          class="flex-shrink-0 w-80 flex gap-4 group cursor-pointer bg-white/50 p-3 rounded-2xl border border-slate-100 snap-center hover:shadow-lg transition-all"
+        >
+          <div
+            class="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden shadow-sm"
+          >
             <img
               src="{{ item.img }}"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               alt="Noticia"
             />
           </div>
-      
+
           <div class="flex flex-col justify-center">
-            <span class="text-[10px] font-black uppercase text-blue-500 mb-1 tracking-widest">
+            <span
+              class="text-[10px] font-black uppercase text-blue-500 mb-1 tracking-widest"
+            >
               {{ item.tag }}
             </span>
-            <h3 class="text-sm font-bold text-[#072146] leading-tight mb-1 group-hover:text-blue-600">
+            <h3
+              class="text-sm font-bold text-[#072146] leading-tight mb-1 group-hover:text-blue-600"
+            >
               {{ item.title }}
             </h3>
             <p class="text-[11px] text-slate-500 line-clamp-2 leading-snug">
               {{ item.desc }}
             </p>
           </div>
-          
         </div>
         {% endfor %}
       </div>
@@ -124,23 +140,38 @@
   const closeBtn = document.getElementById("closeModal");
   const cancelBtn = document.getElementById("cancelModal");
 
+  const openModalAside = document.getElementById("openModalaside");
+  const modalAside = document.getElementById("modalOverlayDos");
+
   // Función para abrir
   openBtn.addEventListener("click", () => {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
   });
 
-  // Función para cerrar (reutilizable)
+
+  closeBtn.addEventListener("click", ()=>{
+    hideModal()
+  })
+
+
+  // modal aside
+  openModalAside.addEventListener("click", () => {
+    modalAside.classList.remove("hidden");
+    modalAside.classList.add("flex");
+  });
+
+
   const hideModal = () => {
-    modal.classList.add("hidden");
+    modalAside.classList.add("hidden");
+    modal.classList.add("hidden")
   };
 
   closeBtn.addEventListener("click", hideModal);
-  cancelBtn.addEventListener("click", hideModal);
 
-  // Cerrar si se hace clic fuera de la caja blanca
+
   window.addEventListener("click", (e) => {
-    if (e.target === modal) {
+    if (e.target === modalAside) {
       hideModal();
     }
   });

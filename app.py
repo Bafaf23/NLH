@@ -53,7 +53,19 @@ def home():
         },
     ]
 
-    return render_template("index.html", saludo=saludo, news=news)
+    link = [
+        {
+            "label": "Posicion Gobal",
+            "link": "#",
+            "icon": '<i class="fa-solid fa-globe text-cyan-400"></i>',
+        },
+        {
+            "label": "Cambiar rol",
+            "link": "#",
+            "icon": '<i class="fa-solid fa-address-card text-cyan-400"></i>',
+        },
+    ]
+    return render_template("index.html", saludo=saludo, news=news, link=link)
 
 
 @app.route("/auth", methods=["GET", "POST"])
@@ -90,9 +102,8 @@ def register():
                 return render_template("auth/register.html")
 
             else:
-                id_role_default = 2
                 password_encriptada = generate_password_hash(password)
-                sql = "INSERT INTO users (dni, name, last_Name, email, birthdate, pass, role_id) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+                sql = "INSERT INTO users (dni, name, last_Name, email, birthdate, pass) VALUES(%s,%s,%s,%s,%s,%s)"
 
                 valores = (
                     dni,
@@ -101,7 +112,6 @@ def register():
                     email,
                     birthdate,
                     password_encriptada,
-                    id_role_default,
                 )
                 print(valores)
                 cur.execute(sql, valores)
@@ -128,28 +138,42 @@ def login():
             conn = mysql.connect()
             cur = conn.cursor(pymysql.cursors.DictCursor)
 
-            sql = "SELECT * FROM users WHERE email = %s AND pass = %s"
-            valor = (email, password)
+            sql = "SELECT * FROM users WHERE email = %s"
+            valor = email
 
             cur.execute(sql, valor)
-
             user = cur.fetchone()
 
             if user:
-                session["loggedin"] = True
-                session["id"] = user["id"]
-                session["name"] = user["name"]
-                session["lastName"] = user["last_name"]
-                session["email"] = user["email"]
-                session["role"] = user["role_id"]
+                if check_password_hash(user["pass"], password):
+                    session["loggedin"] = True
+                    session["id"] = user["id"]
+                    session["name"] = user["name"]
+                    session["lastName"] = user["last_name"]
+                    session["email"] = user["email"]
+                    session["role"] = user["rol"]
 
-                print(f"Sesión iniciada para: {user['name']}")
-                return redirect(url_for("home"))
+                    print(f"Sesión iniciada para: {user['name']}")
+                    return redirect(url_for("home"))
+                else:
+                    print("Usuario o clave errada 404")
             else:
-                print("Usuario o clave errada")
+                print("Usuario no entontrado")
 
     except Exception as e:
         print(f"hubo un error {e}")
+
+    return redirect(url_for("home"))
+
+
+@app.route("/logout")
+def logout():
+    session.pop("loggedin", None)
+    session.pop("id", None)
+    session.pop("name", None)
+    session.pop("lastName", None)
+    session.pop("email", None)
+    session.pop("role", None)
 
     return redirect(url_for("home"))
 
