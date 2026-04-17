@@ -5,6 +5,16 @@
 
 ---
 
+## 📸 Vista Previa
+
+### Escritorio
+![Pantalla Principal](./screenshots/home.png)
+
+### Login y Seguridad
+![Manejo de Sesión](./screenshots/login.png)
+
+---
+
 ## 🛠️ Tecnologías Utilizadas
 
 * **Backend:** Python 3.10+ & Flask
@@ -43,3 +53,6 @@ CREATE TABLE IF NOT EXISTS users (
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+```
+
+Desarrollado por **Bryant Facenda** - 2026
