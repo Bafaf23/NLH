@@ -1,0 +1,69 @@
+<div
+  id="modalOverlay"
+  class="fixed inset-0 bg-blue-950/60 backdrop-blur-sm hidden items-end justify-center z-[100] p-4 h-screen transition-opacity duration-300 ease-out"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-300"
+  >
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-[#072146]">Iniciar sesión</h3>
+        <button
+          id="closeModal"
+          class="text-slate-400 hover:text-slate-600 text-2xl"
+        >
+          &times;
+        </button>
+      </div>
+
+      <form action="" method="POST" class="space-y-4">
+        {%if "loggedin" in session%}
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1"
+            >Contraseña</label
+          >
+          <input
+            type="password"
+            id="pass"
+            name="pass"
+            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800"
+            placeholder="••••••••"
+          />
+        </div>
+        {%else%}
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1"
+            >Correo</label
+          >
+          <input
+            type="text"
+            id="email"
+            name="email"
+            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800"
+            placeholder="Ej: bfacenda"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1"
+            >Contraseña</label
+          >
+          <input
+            type="password"
+            id="pass"
+            name="pass"
+            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800"
+            placeholder="••••••••"
+          />
+        </div>
+        {%endif%}
+
+        <button
+          type="submit"
+          class="w-full bg-[#005B7F] hover:bg-[#004a66] text-white font-bold py-3 rounded-xl transition-colors shadow-lg"
+        >
+          Entrar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
