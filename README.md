@@ -8,17 +8,11 @@
 
 ## 📸 Vista Previa
 
-### Escritorio
-
 <p align="center">
-  <img src="./screenshots/home.png" width="80%" alt="Vista de Escritorio">
+  <img src="./screenshots/home.png" width="25%" alt="Vista de Escritorio" />
+  <img src="./screenshots/login.png" width="25%" alt="Panel de Login" />
 </p>
 
-### Login y Seguridad
-
-<p align="center">
-  <img src="./screenshots/login.png" width="45%" alt="Panel de Login">
-</p>
 ---
 
 ## 🛠️ Tecnologías Utilizadas
