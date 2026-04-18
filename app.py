@@ -1,5 +1,3 @@
-from cProfile import label
-from os import name
 from flask import (
     Flask,
     redirect,
@@ -192,6 +190,12 @@ def login():
 
             if user:
                 if check_password_hash(user["pass"], password):
+
+                    if request.form.get("remember"):
+                        session.permanent = True
+                    else:
+                        session.permanent = False
+
                     session["loggedin"] = True
                     session["id"] = user["id"]
                     session["name"] = user["name"]
@@ -200,7 +204,12 @@ def login():
                     session["role"] = user["rol"]
 
                     print(f"Sesión iniciada para: {user['name']}")
-                    return redirect(url_for("home"))
+
+                    if session['role'] == "administrador":
+                        return redirect(url_for("dashboard"))
+                    else:
+                        return redirect(url_for("home"))
+
                 else:
                     print("Usuario o clave errada 404")
             else:
@@ -268,6 +277,22 @@ def update_role(id_user: str) -> str:
     except Exception as e:
         print(f"hubo un error{e}")
         return f"Error al actualizar: {e}", 500
+
+
+@app.route("/dashboard")
+def dashboard():
+
+    def count_users():
+        conn = mysql.connect()
+        cur = conn.cursor()
+
+        cur.execute("SELECT COUNT(*) FROM users")
+
+        total = cur.fetchone()[0]
+        cur.close()
+        return total
+
+    return render_template("page/dashboard.html", user_total=count_users())
 
 
 if __name__ == "__main__":
