@@ -1,3 +1,4 @@
+from types import TracebackType
 from flask import (
     Flask,
     redirect,
@@ -9,11 +10,13 @@ from flask import (
 )
 import pymysql
 from datetime import datetime
+from datetime import timedelta
 from flaskext.mysql import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = "estoy_cansado_jefe"
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
 mysql = MySQL()
 
@@ -70,7 +73,7 @@ def home():
     return render_template("index.html", saludo=saludo, news=news, link=link)
 
 
-@app.route("/auth", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """
     Gestiona el registro de nuevos usuarios en el sistema.
@@ -138,7 +141,6 @@ def register():
                     birthdate,
                     password_encriptada,
                 )
-                print(valores)
                 cur.execute(sql, valores)
                 conn.commit()
                 print("You have successfully registered!")
@@ -149,7 +151,7 @@ def register():
     return render_template("auth/register.html")
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """
     Gestiona la autenticación de usuarios y creación de sesiones.
@@ -232,12 +234,7 @@ def logout():
     Returns:
         redirect: Redirección a la página de inicio (home) tras cerrar sesión.
     """
-    session.pop("loggedin", None)
-    session.pop("id", None)
-    session.pop("name", None)
-    session.pop("lastName", None)
-    session.pop("email", None)
-    session.pop("role", None)
+    session.clear()
 
     return redirect(url_for("home"))
 
@@ -291,9 +288,69 @@ def dashboard():
         total = cur.fetchone()[0]
         cur.close()
         return total
+    
+    def get_info_user():
+        """
+        Obtiene todos los usuarios de la base de datos y los renderiza en una tabla.
+        """
+        try:
+            con = mysql.connect()
+            cur = con.cursor(pymysql.cursors.DictCursor)
+            cur.execute("SELECT id, dni, name, last_name, email, rol FROM users")
+            usuarios = cur.fetchall()
+            cur.close()
 
-    return render_template("page/dashboard.html", user_total=count_users())
+            return usuarios
+        except Exception as e:
+            print(f"Error al obtener usuarios: {e}")
+            return redirect(url_for("home"))
 
+    get_info_user()
+
+    return render_template("page/dashboard.html", user_total=count_users(), list_user=get_info_user())
+
+@app.route("/verify_credentials", methods=["POST"])
+def verify_credentials():
+    """
+    Verificacion de credenciales para aceder al dashboard
+    """
+    if "id" not in session:
+        render_template("index")
+
+    password = request.form.get("pass_verify")
+    user_id = session["id"]
+
+    try:
+        conn = mysql.connect()
+        cur = conn.cursor(pymysql.cursors.DictCursor)
+        cur.execute("SELECT pass FROM users WHERE id = %s", (user_id,))
+        user = cur.fetchone()
+        cur.close()
+
+        if user and check_password_hash(user["pass"], password):
+            return redirect(url_for("dashboard")) if session["role"] == "administrador" else  redirect(url_for("home"))
+        else:
+            print("Clave incorrecta")
+            return redirect(url_for("home"))
+
+    except Exception as e:
+        print(f"Error en verificación: {e}")
+        return redirect(url_for("home"))
+
+
+@app.route("/delete_user/<int:id_user>", methods=["DELETE"])
+def delete(id_user):
+    """ Elimina al usuario de la base datos mediante una peticion AJAX"""
+    try:
+        con = mysql.connect()
+        cur = con.cursor()
+        cur.execute("DELETE FROM users WHERE id = %s", (id_user,))
+        con.commit()
+        con.close()
+
+        return {"status": "success",  "message": "Usuario eliminado"}, 200
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500
 
 if __name__ == "__main__":
     app.run(debug=True)

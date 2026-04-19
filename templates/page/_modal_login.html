@@ -16,7 +16,7 @@
         </button>
       </div>
 
-      <form action="" method="POST" class="space-y-4">
+      <form action="{{ url_for('verify_credentials') if 'loggedin' in session else url_for('login') }}" method="POST" class="space-y-4">
         {%if "loggedin" in session%}
         <div>
           <label class="block text-xs font-bold text-slate-500 uppercase mb-1"
@@ -24,8 +24,8 @@
           >
           <input
             type="password"
-            id="pass"
-            name="pass"
+            id="pass_verify"
+            name="pass_verify"
             class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800"
             placeholder="••••••••"
           />

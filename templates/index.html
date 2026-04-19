@@ -31,7 +31,7 @@
       class="bg-white/80 backdrop-blur-4xl rounded-2xl p-6 shadow-2xl flex flex-col gap-6 border"
     >
       <div class="flex items-center gap-4">
-        {% if "loggedin" in session %}
+        {% if session['loggedin'] %}
         <div
           class="w-14 h-14 rounded-full border-2 border-blue-600 p-0.5 flex items-center justify-center bg-cyan-500/40"
         >
@@ -41,6 +41,13 @@
         </div>
         <h2 class="text-2xl font-light text-[#48C3C7] leading-tight">
           Hola, <span class="font-bold">{{ session["name"] }}</span>
+          
+          {% if session['role'] == 'admin' %}
+          <span
+            class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full ml-2"
+            >Admin</span
+          >
+          {% endif %}
         </h2>
         {% else %}
         <h2 class="text-3xl text-[#48C3C7] font-bold tracking-tight">
@@ -63,7 +70,7 @@
 
         <div class="flex justify-between items-center px-1">
           <p class="text-slate-500 text-sm">¿No tienes cuenta?</p>
-          <a href="/auth" class="text-[#48C3C7] font-bold text-sm"
+          <a href="/register" class="text-[#48C3C7] font-bold text-sm"
             >Hazte cliente</a
           >
         </div>
@@ -149,11 +156,9 @@
     modal.classList.add("flex");
   });
 
-
-  closeBtn.addEventListener("click", ()=>{
-    hideModal()
-  })
-
+  closeBtn.addEventListener("click", () => {
+    hideModal();
+  });
 
   // modal aside
   openModalAside.addEventListener("click", () => {
@@ -161,14 +166,12 @@
     modalAside.classList.add("flex");
   });
 
-
   const hideModal = () => {
     modalAside.classList.add("hidden");
-    modal.classList.add("hidden")
+    modal.classList.add("hidden");
   };
 
   closeBtn.addEventListener("click", hideModal);
-
 
   window.addEventListener("click", (e) => {
     if (e.target === modalAside) {
