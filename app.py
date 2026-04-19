@@ -328,7 +328,7 @@ def verify_credentials():
         cur.close()
 
         if user and check_password_hash(user["pass"], password):
-            return redirect(url_for("dashboard")) if session["role"] == "administrador" else  redirect(url_for("home"))
+            return redirect(url_for("dashboard")) if session["role"] == "administrador" else  redirect(url_for("meme"))
         else:
             print("Clave incorrecta")
             return redirect(url_for("home"))
@@ -351,6 +351,10 @@ def delete(id_user):
         return {"status": "success",  "message": "Usuario eliminado"}, 200
     except Exception as e:
         return {"status": "error", "message": str(e)}, 500
+
+@app.route("/meme")
+def meme():
+    return render_template("/page/meme.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
